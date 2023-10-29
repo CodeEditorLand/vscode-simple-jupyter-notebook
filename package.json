@@ -4,9 +4,11 @@
   "publisher": "ms-vscode",
   "description": "Starter extension for developing debug adapters for VS Code.",
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
   },
-  "version": "1.0.0",
+  "version": "0.0.1",
   "engines": {
     "vscode": "1.49.0"
   },
@@ -96,14 +98,8 @@
     "test": "npm run test:lint && npm run test:fmt",
     "test:lint": "eslint \"src/**/*.ts\"",
     "test:fmt": "prettier --list-different \"src/**/*.ts\"",
-    "fmt": "prettier --write \"src/**/*.ts\"&& npm run test:lint -- --fix"
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "singleQuote": true,
-    "arrowParens": "avoid",
-    "printWidth": 100,
-    "tabWidth": 2
+    "fmt": "prettier --write \"src/**/*.ts\"&& npm run test:lint -- --fix",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
   },
   "devDependencies": {
     "@types/glob": "8.1.0",
@@ -119,7 +115,8 @@
     "prettier": "3.0.3",
     "typescript": "5.2.2",
     "vscode-test": "1.4.0",
-    "vscode-dts": "0.3.1"
+    "vscode-dts": "0.3.1",
+    "typescript-esbuild": "0.3.1"
   },
   "dependencies": {
     "@nteract/messaging": "7.0.20",
@@ -128,5 +125,19 @@
     "split2": "4.2.0",
     "zeromq": "6.0.0-beta.17",
     "vscode-debugprotocol": "1.41.0"
+  },
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
   }
 }
