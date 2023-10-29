@@ -1,49 +1,45 @@
 {
   "name": "simple-jupyter-notebook",
   "displayName": "Simple Jupyter Notebook",
-  "publisher": "ms-vscode",
+  "version": "0.0.1",
+  "private": "false",
   "description": "Starter extension for developing debug adapters for VS Code.",
+  "categories": [
+    "Other"
+  ],
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "license": "MIT",
   "author": {
     "name": "Nikola Hristov",
     "email": "nikola@nikolahristov.tech",
     "url": "https://nikolahristov.tech"
   },
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "1.49.0"
+  "publisher": "playform",
+  "type": "module",
+  "main": "./out/extension.js",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "fmt": "prettier --write \"src/**/*.ts\"&& npm run test:lint -- --fix",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts",
+    "pretest": "npm run compile && npm run lint",
+    "test": "npm run test:lint && npm run test:fmt",
+    "test:fmt": "prettier --list-different \"src/**/*.ts\"",
+    "test:lint": "eslint \"src/**/*.ts\"",
+    "updatetypes": "cd src/types && vscode-dts dev && vscode-dts master",
+    "vscode:prepublish": "npm run compile",
+    "watch": "tsc -watch -p ./"
   },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onNotebookEditor:jupyter",
-    "onNotebook:jupyter",
-    "onCommand:simple-jupyter-notebook.restart-kernel",
-    "onDebug:xeus"
-  ],
-  "enableProposedApi": true,
   "contributes": {
     "breakpoints": [
       {
         "language": "python"
-      }
-    ],
-    "debuggers": [
-      {
-        "type": "xeus",
-        "label": "xeus Debug"
-      }
-    ],
-    "notebookProvider": [
-      {
-        "viewType": "jupyter",
-        "displayName": "Jupyter",
-        "selector": [
-          {
-            "filenamePattern": "*.ipynb",
-            "excludeFileNamePattern": "*.test.ipynb"
-          }
-        ]
       }
     ],
     "commands": [
@@ -56,6 +52,27 @@
         "command": "simple-jupyter-notebook.restart-kernel",
         "title": "Restart Notebook Kernel",
         "icon": "$(refresh)"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Simple Jupyter Kernels",
+        "properties": {
+          "simple-jupyter.searchPaths": {
+            "description": "List of folders to search to discover Jupyter kernels",
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "xeus",
+        "label": "xeus Debug"
       }
     ],
     "menus": {
@@ -72,34 +89,32 @@
         }
       ]
     },
-    "configuration": [
+    "notebookProvider": [
       {
-        "title": "Simple Jupyter Kernels",
-        "properties": {
-          "simple-jupyter.searchPaths": {
-            "description": "List of folders to search to discover Jupyter kernels",
-            "default": [],
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+        "viewType": "jupyter",
+        "displayName": "Jupyter",
+        "selector": [
+          {
+            "filenamePattern": "*.ipynb",
+            "excludeFileNamePattern": "*.test.ipynb"
           }
-        }
+        ]
       }
     ]
   },
-  "main": "./out/extension.js",
-  "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "updatetypes": "cd src/types && vscode-dts dev && vscode-dts master",
-    "test": "npm run test:lint && npm run test:fmt",
-    "test:lint": "eslint \"src/**/*.ts\"",
-    "test:fmt": "prettier --list-different \"src/**/*.ts\"",
-    "fmt": "prettier --write \"src/**/*.ts\"&& npm run test:lint -- --fix",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  "activationEvents": [
+    "onNotebookEditor:jupyter",
+    "onNotebook:jupyter",
+    "onCommand:simple-jupyter-notebook.restart-kernel",
+    "onDebug:xeus"
+  ],
+  "dependencies": {
+    "@nteract/messaging": "7.0.20",
+    "get-port": "7.0.0",
+    "rxjs": "7.8.1",
+    "split2": "4.2.0",
+    "vscode-debugprotocol": "1.41.0",
+    "zeromq": "6.0.0-beta.17"
   },
   "devDependencies": {
     "@types/glob": "8.1.0",
@@ -114,30 +129,15 @@
     "mocha": "10.2.0",
     "prettier": "3.0.3",
     "typescript": "5.2.2",
-    "vscode-test": "1.4.0",
+    "typescript-esbuild": "0.3.1",
     "vscode-dts": "0.3.1",
-    "typescript-esbuild": "0.3.1"
+    "vscode-test": "1.4.0"
   },
-  "dependencies": {
-    "@nteract/messaging": "7.0.20",
-    "get-port": "7.0.0",
-    "rxjs": "7.8.1",
-    "split2": "4.2.0",
-    "zeromq": "6.0.0-beta.17",
-    "vscode-debugprotocol": "1.41.0"
+  "engines": {
+    "vscode": "1.49.0"
   },
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "license": "MIT",
-  "type": "module",
-  "private": "false",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "enableProposedApi": true
 }
