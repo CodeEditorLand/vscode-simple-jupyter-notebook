@@ -1,143 +1,143 @@
 {
-  "name": "simple-jupyter-notebook",
-  "displayName": "Simple Jupyter Notebook",
-  "version": "0.0.1",
-  "private": "false",
-  "description": "Starter extension for developing debug adapters for VS Code.",
-  "categories": [
-    "Other"
-  ],
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  "publisher": "playform",
-  "type": "module",
-  "main": "./out/extension.js",
-  "scripts": {
-    "compile": "tsc -p ./",
-    "fmt": "prettier --write \"src/**/*.ts\"&& npm run test:lint -- --fix",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts",
-    "pretest": "npm run compile && npm run lint",
-    "test": "npm run test:lint && npm run test:fmt",
-    "test:fmt": "prettier --list-different \"src/**/*.ts\"",
-    "test:lint": "eslint \"src/**/*.ts\"",
-    "updatetypes": "cd src/types && vscode-dts dev && vscode-dts master",
-    "vscode:prepublish": "npm run compile",
-    "watch": "tsc -watch -p ./"
-  },
-  "contributes": {
-    "breakpoints": [
-      {
-        "language": "python"
-      }
-    ],
-    "commands": [
-      {
-        "command": "simple-jupyter-notebook.toggleDebugging",
-        "title": "Toggle Notebook Debugging",
-        "icon": "$(bug)"
-      },
-      {
-        "command": "simple-jupyter-notebook.restart-kernel",
-        "title": "Restart Notebook Kernel",
-        "icon": "$(refresh)"
-      }
-    ],
-    "configuration": [
-      {
-        "title": "Simple Jupyter Kernels",
-        "properties": {
-          "simple-jupyter.searchPaths": {
-            "description": "List of folders to search to discover Jupyter kernels",
-            "default": [],
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    ],
-    "debuggers": [
-      {
-        "type": "xeus",
-        "label": "xeus Debug"
-      }
-    ],
-    "menus": {
-      "editor/title": [
-        {
-          "command": "simple-jupyter-notebook.toggleDebugging",
-          "when": "notebookEditorFocused",
-          "group": "navigation@1"
-        },
-        {
-          "command": "simple-jupyter-notebook.restart-kernel",
-          "when": "notebookEditorFocused",
-          "group": "navigation@2"
-        }
-      ]
-    },
-    "notebookProvider": [
-      {
-        "viewType": "jupyter",
-        "displayName": "Jupyter",
-        "selector": [
-          {
-            "filenamePattern": "*.ipynb",
-            "excludeFileNamePattern": "*.test.ipynb"
-          }
-        ]
-      }
-    ]
-  },
-  "activationEvents": [
-    "onNotebookEditor:jupyter",
-    "onNotebook:jupyter",
-    "onCommand:simple-jupyter-notebook.restart-kernel",
-    "onDebug:xeus"
-  ],
-  "dependencies": {
-    "@nteract/messaging": "7.0.20",
-    "get-port": "7.0.0",
-    "rxjs": "7.8.1",
-    "split2": "4.2.0",
-    "vscode-debugprotocol": "1.41.0",
-    "zeromq": "6.0.0-beta.17"
-  },
-  "devDependencies": {
-    "@types/glob": "8.1.0",
-    "@types/mocha": "10.0.3",
-    "@types/node": "20.8.9",
-    "@types/split2": "4.2.2",
-    "@typescript-eslint/eslint-plugin": "6.9.0",
-    "@typescript-eslint/parser": "6.9.0",
-    "eslint": "8.52.0",
-    "eslint-plugin-header": "3.1.1",
-    "glob": "10.3.10",
-    "mocha": "10.2.0",
-    "prettier": "3.0.3",
-    "typescript": "5.2.2",
-    "typescript-esbuild": "0.3.1",
-    "vscode-dts": "0.3.1",
-    "vscode-test": "1.4.0"
-  },
-  "engines": {
-    "vscode": "1.49.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "enableProposedApi": true
+	"name": "simple-jupyter-notebook",
+	"displayName": "Simple Jupyter Notebook",
+	"version": "0.0.1",
+	"private": "false",
+	"description": "Starter extension for developing debug adapters for VS Code.",
+	"categories": [
+		"Other"
+	],
+	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Nikola Hristov",
+		"email": "nikola@nikolahristov.tech",
+		"url": "https://nikolahristov.tech"
+	},
+	"publisher": "playform",
+	"type": "module",
+	"main": "./out/extension.js",
+	"scripts": {
+		"compile": "tsc -p ./",
+		"fmt": "prettier --write \"src/**/*.ts\"&& npm run test:lint -- --fix",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"pretest": "npm run compile && npm run lint",
+		"test": "npm run test:lint && npm run test:fmt",
+		"test:fmt": "prettier --list-different \"src/**/*.ts\"",
+		"test:lint": "eslint \"src/**/*.ts\"",
+		"updatetypes": "cd src/types && vscode-dts dev && vscode-dts master",
+		"vscode:prepublish": "npm run compile",
+		"watch": "tsc -watch -p ./"
+	},
+	"contributes": {
+		"breakpoints": [
+			{
+				"language": "python"
+			}
+		],
+		"commands": [
+			{
+				"command": "simple-jupyter-notebook.toggleDebugging",
+				"title": "Toggle Notebook Debugging",
+				"icon": "$(bug)"
+			},
+			{
+				"command": "simple-jupyter-notebook.restart-kernel",
+				"title": "Restart Notebook Kernel",
+				"icon": "$(refresh)"
+			}
+		],
+		"configuration": [
+			{
+				"title": "Simple Jupyter Kernels",
+				"properties": {
+					"simple-jupyter.searchPaths": {
+						"description": "List of folders to search to discover Jupyter kernels",
+						"default": [],
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			}
+		],
+		"debuggers": [
+			{
+				"type": "xeus",
+				"label": "xeus Debug"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "simple-jupyter-notebook.toggleDebugging",
+					"when": "notebookEditorFocused",
+					"group": "navigation@1"
+				},
+				{
+					"command": "simple-jupyter-notebook.restart-kernel",
+					"when": "notebookEditorFocused",
+					"group": "navigation@2"
+				}
+			]
+		},
+		"notebookProvider": [
+			{
+				"viewType": "jupyter",
+				"displayName": "Jupyter",
+				"selector": [
+					{
+						"filenamePattern": "*.ipynb",
+						"excludeFileNamePattern": "*.test.ipynb"
+					}
+				]
+			}
+		]
+	},
+	"activationEvents": [
+		"onNotebookEditor:jupyter",
+		"onNotebook:jupyter",
+		"onCommand:simple-jupyter-notebook.restart-kernel",
+		"onDebug:xeus"
+	],
+	"dependencies": {
+		"@nteract/messaging": "7.0.20",
+		"get-port": "7.0.0",
+		"rxjs": "7.8.1",
+		"split2": "4.2.0",
+		"vscode-debugprotocol": "1.41.0",
+		"zeromq": "6.0.0-beta.17"
+	},
+	"devDependencies": {
+		"@types/glob": "8.1.0",
+		"@types/mocha": "10.0.3",
+		"@types/node": "20.8.9",
+		"@types/split2": "4.2.2",
+		"@typescript-eslint/eslint-plugin": "6.9.0",
+		"@typescript-eslint/parser": "6.9.0",
+		"eslint": "8.52.0",
+		"eslint-plugin-header": "3.1.1",
+		"glob": "10.3.10",
+		"mocha": "10.2.0",
+		"prettier": "3.0.3",
+		"typescript": "5.2.2",
+		"typescript-esbuild": "0.3.1",
+		"vscode-dts": "0.3.1",
+		"vscode-test": "1.4.0"
+	},
+	"engines": {
+		"vscode": "1.49.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"enableProposedApi": true
 }
