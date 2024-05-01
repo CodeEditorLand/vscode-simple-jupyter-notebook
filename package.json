@@ -1,33 +1,17 @@
 {
-	"name": "simple-jupyter-notebook",
-	"displayName": "Simple Jupyter Notebook",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Starter extension for developing debug adapters for VS Code.",
-	"keywords": [
-		"land"
+	"activationEvents": [
+		"onNotebookEditor:jupyter",
+		"onNotebook:jupyter",
+		"onCommand:simple-jupyter-notebook.restart-kernel",
+		"onDebug:xeus"
 	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandSimpleJupyterNotebook#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandSimpleJupyterNotebook/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandSimpleJupyterNotebook.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"name": "🌆 — Land —",
 		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
 		"url": "HTTPS://Land.PlayForm.Cloud"
 	},
-	"type": "module",
-	"main": "./out/extension.js",
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"compile": "tsc -p ./",
-		"prepublishOnly": "Build 'Source/**/*.ts'",
-		"updatetypes": "cd src/types && vscode-dts dev && vscode-dts master"
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandSimpleJupyterNotebook/issues"
 	},
 	"contributes": {
 		"breakpoints": [
@@ -95,12 +79,6 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onNotebookEditor:jupyter",
-		"onNotebook:jupyter",
-		"onCommand:simple-jupyter-notebook.restart-kernel",
-		"onDebug:xeus"
-	],
 	"dependencies": {
 		"@nteract/messaging": "7.0.20",
 		"get-port": "7.1.0",
@@ -108,6 +86,7 @@
 		"split2": "4.2.0",
 		"zeromq": "6.0.0-beta.19"
 	},
+	"description": "Starter extension for developing debug adapters for VS Code.",
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
@@ -116,8 +95,29 @@
 		"@types/split2": "4.2.3",
 		"glob": "10.3.12"
 	},
+	"displayName": "Simple Jupyter Notebook",
+	"enableProposedApi": true,
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandSimpleJupyterNotebook#readme",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"main": "./out/extension.js",
+	"name": "simple-jupyter-notebook",
+	"private": false,
 	"publishConfig": {
 		"access": "public"
 	},
-	"enableProposedApi": true
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandSimpleJupyterNotebook.git"
+	},
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"compile": "tsc -p ./",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"updatetypes": "cd src/types && vscode-dts dev && vscode-dts master"
+	},
+	"type": "module",
+	"version": "0.0.1"
 }
