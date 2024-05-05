@@ -1,0 +1,123 @@
+{
+	"name": "simple-jupyter-notebook",
+	"displayName": "Simple Jupyter Notebook",
+	"version": "0.0.1",
+	"private": false,
+	"description": "Starter extension for developing debug adapters for VS Code.",
+	"keywords": [
+		"land"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandSimpleJupyterNotebook#readme",
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandSimpleJupyterNotebook/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandSimpleJupyterNotebook.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"type": "module",
+	"main": "./out/extension.js",
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"compile": "tsc -p ./",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"updatetypes": "cd src/types && vscode-dts dev && vscode-dts master"
+	},
+	"contributes": {
+		"breakpoints": [
+			{
+				"language": "python"
+			}
+		],
+		"commands": [
+			{
+				"command": "simple-jupyter-notebook.toggleDebugging",
+				"icon": "$(bug)",
+				"title": "Toggle Notebook Debugging"
+			},
+			{
+				"command": "simple-jupyter-notebook.restart-kernel",
+				"icon": "$(refresh)",
+				"title": "Restart Notebook Kernel"
+			}
+		],
+		"configuration": [
+			{
+				"properties": {
+					"simple-jupyter.searchPaths": {
+						"default": [],
+						"description": "List of folders to search to discover Jupyter kernels",
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"title": "Simple Jupyter Kernels"
+			}
+		],
+		"debuggers": [
+			{
+				"label": "xeus Debug",
+				"type": "xeus"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "simple-jupyter-notebook.toggleDebugging",
+					"group": "navigation@1",
+					"when": "notebookEditorFocused"
+				},
+				{
+					"command": "simple-jupyter-notebook.restart-kernel",
+					"group": "navigation@2",
+					"when": "notebookEditorFocused"
+				}
+			]
+		},
+		"notebookProvider": [
+			{
+				"displayName": "Jupyter",
+				"selector": [
+					{
+						"excludeFileNamePattern": "*.test.ipynb",
+						"filenamePattern": "*.ipynb"
+					}
+				],
+				"viewType": "jupyter"
+			}
+		]
+	},
+	"activationEvents": [
+		"onNotebookEditor:jupyter",
+		"onNotebook:jupyter",
+		"onCommand:simple-jupyter-notebook.restart-kernel",
+		"onDebug:xeus"
+	],
+	"dependencies": {
+		"@nteract/messaging": "7.0.20",
+		"get-port": "7.1.0",
+		"rxjs": "7.8.1",
+		"split2": "4.2.0",
+		"zeromq": "6.0.0-beta.19"
+	},
+	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6",
+		"@types/glob": "8.1.0",
+		"@types/node": "20.12.7",
+		"@types/split2": "4.2.3",
+		"glob": "10.3.12"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"enableProposedApi": true
+}
