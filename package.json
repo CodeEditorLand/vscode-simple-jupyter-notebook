@@ -80,17 +80,17 @@
 		"onDebug:xeus"
 	],
 	"dependencies": {
-		"@nteract/messaging": "^7.0.10",
-		"get-port": "^5.1.1",
-		"rxjs": "^6.6.3",
-		"split2": "^3.2.2",
-		"zeromq": "^6.0.0-beta.6"
+		"@nteract/messaging": "7.0.10",
+		"get-port": "5.1.1",
+		"rxjs": "6.6.3",
+		"split2": "3.2.2",
+		"zeromq": "6.0.0-beta.6"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/node": "^13.11.0",
-		"@types/split2": "^2.1.6",
-		"glob": "^7.1.6"
+		"@types/glob": "7.1.1",
+		"@types/node": "13.11.0",
+		"@types/split2": "2.1.6",
+		"glob": "7.1.6"
 	},
 	"enableProposedApi": true
 }
