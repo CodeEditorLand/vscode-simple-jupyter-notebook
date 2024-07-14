@@ -1,12 +1,10 @@
 {
-	"name": "simple-jupyter-notebook",
-	"displayName": "Simple Jupyter Notebook",
-	"description": "Starter extension for developing debug adapters for VS Code.",
-	"main": "./out/extension.js",
-	"scripts": {
-		"compile": "tsc -p ./",
-		"updatetypes": "cd src/types && vscode-dts dev && vscode-dts master"
-	},
+	"activationEvents": [
+		"onNotebookEditor:jupyter",
+		"onNotebook:jupyter",
+		"onCommand:simple-jupyter-notebook.restart-kernel",
+		"onDebug:xeus"
+	],
 	"contributes": {
 		"breakpoints": [
 			{
@@ -73,12 +71,6 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onNotebookEditor:jupyter",
-		"onNotebook:jupyter",
-		"onCommand:simple-jupyter-notebook.restart-kernel",
-		"onDebug:xeus"
-	],
 	"dependencies": {
 		"@nteract/messaging": "^7.0.10",
 		"get-port": "^5.1.1",
@@ -86,11 +78,19 @@
 		"split2": "^3.2.2",
 		"zeromq": "^6.0.0-beta.6"
 	},
+	"description": "Starter extension for developing debug adapters for VS Code.",
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/node": "^13.11.0",
 		"@types/split2": "^2.1.6",
 		"glob": "^7.1.6"
 	},
-	"enableProposedApi": true
+	"displayName": "Simple Jupyter Notebook",
+	"enableProposedApi": true,
+	"main": "./out/extension.js",
+	"name": "simple-jupyter-notebook",
+	"scripts": {
+		"compile": "tsc -p ./",
+		"updatetypes": "cd src/types && vscode-dts dev && vscode-dts master"
+	}
 }
