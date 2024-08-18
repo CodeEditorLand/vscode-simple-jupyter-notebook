@@ -76,12 +76,12 @@
 		"get-port": "7.1.0",
 		"rxjs": "8.0.0-alpha.14",
 		"split2": "4.2.0",
-		"zeromq": "6.0.0-beta.20"
+		"zeromq": "6.0.0"
 	},
 	"description": "Starter extension for developing debug adapters for VS Code.",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "22.1.0",
+		"@types/node": "22.4.0",
 		"@types/split2": "4.2.3",
 		"glob": "11.0.0"
 	},
