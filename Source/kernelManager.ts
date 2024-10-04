@@ -2,173 +2,208 @@
  * Copyright (C) Microsoft Corporation. All rights reserved.
  *--------------------------------------------------------*/
 
-import { IKernelSpec, KernelProvider, IRunningKernel } from './kernelProvider';
-import * as vscode from 'vscode';
-import { IDisposable } from './disposable';
-import { NotebookKernel } from './notebookKernel';
+import * as vscode from "vscode";
 
-export class KernelManager implements IDisposable, vscode.NotebookKernelProvider {
-  private activeSpec?: IKernelSpec;
-  private activeConns = new Map<vscode.NotebookDocument, Map<string, NotebookKernel>>();
+import { IDisposable } from "./disposable";
+import { IKernelSpec, IRunningKernel, KernelProvider } from "./kernelProvider";
+import { NotebookKernel } from "./notebookKernel";
 
-  constructor(
-    private readonly provider: KernelProvider,
-    private readonly context: vscode.ExtensionContext,
-  ) {
-    vscode.notebook.onDidCloseNotebookDocument(document => {
-      const kernelCache = this.activeConns.get(document);
-      if (!kernelCache) {
-        return;
-      }
+export class KernelManager
+	implements IDisposable, vscode.NotebookKernelProvider
+{
+	private activeSpec?: IKernelSpec;
+	private activeConns = new Map<
+		vscode.NotebookDocument,
+		Map<string, NotebookKernel>
+	>();
 
-      this.activeConns.delete(document);
-      kernelCache.forEach(kernel => kernel.resolve().then(k => k?.dispose()));
-    });
-  }
+	constructor(
+		private readonly provider: KernelProvider,
+		private readonly context: vscode.ExtensionContext,
+	) {
+		vscode.notebook.onDidCloseNotebookDocument((document) => {
+			const kernelCache = this.activeConns.get(document);
+			if (!kernelCache) {
+				return;
+			}
 
-  async provideKernels(document: vscode.NotebookDocument, token: vscode.CancellationToken): Promise<vscode.NotebookKernel[]> {
-    const kernelSpecs = await this.provider.getAvailableKernels();
-    const kernelsCache = this.activeConns.get(document) || new Map<string, NotebookKernel>();
-    this.activeConns.set(document, kernelsCache);
+			this.activeConns.delete(document);
+			kernelCache.forEach((kernel) =>
+				kernel.resolve().then((k) => k?.dispose()),
+			);
+		});
+	}
 
-    return kernelSpecs.map(spec => {
-      const specId = `__${spec.id}__${spec.location}`;
-      if (kernelsCache.has(specId)) {
-        return kernelsCache.get(specId)!;
-      }
+	async provideKernels(
+		document: vscode.NotebookDocument,
+		token: vscode.CancellationToken,
+	): Promise<vscode.NotebookKernel[]> {
+		const kernelSpecs = await this.provider.getAvailableKernels();
+		const kernelsCache =
+			this.activeConns.get(document) || new Map<string, NotebookKernel>();
+		this.activeConns.set(document, kernelsCache);
 
-      const kernel = new NotebookKernel(this.provider, spec);
-      kernelsCache.set(specId, kernel);
-      return kernel;
-    });
-  }
+		return kernelSpecs.map((spec) => {
+			const specId = `__${spec.id}__${spec.location}`;
+			if (kernelsCache.has(specId)) {
+				return kernelsCache.get(specId)!;
+			}
 
-  async resolveKernel(kernel: NotebookKernel, document: vscode.NotebookDocument, webview: vscode.NotebookCommunication, token: vscode.CancellationToken): Promise<void> {
-    try {
-      await kernel.resolve();
-    } catch (e) {
-      this.activeConns.get(document)?.delete(`__${kernel.kernelSpec.id}__${kernel.kernelSpec.location}`);
-    }
-  }
+			const kernel = new NotebookKernel(this.provider, spec);
+			kernelsCache.set(specId, kernel);
+			return kernel;
+		});
+	}
 
-  /**
-   * Gets the kernel for a notebook document by the document URI.
-   */
-  public async getDocumentKernelByUri(uri: string) {
-    for (const [document, kernel] of this.activeConns.entries()) {
-      if (document.uri.toString() === uri) {
-        return kernel;
-      }
-    }
+	async resolveKernel(
+		kernel: NotebookKernel,
+		document: vscode.NotebookDocument,
+		webview: vscode.NotebookCommunication,
+		token: vscode.CancellationToken,
+	): Promise<void> {
+		try {
+			await kernel.resolve();
+		} catch (e) {
+			this.activeConns
+				.get(document)
+				?.delete(
+					`__${kernel.kernelSpec.id}__${kernel.kernelSpec.location}`,
+				);
+		}
+	}
 
-    return undefined;
-  }
+	/**
+	 * Gets the kernel for a notebook document by the document URI.
+	 */
+	public async getDocumentKernelByUri(uri: string) {
+		for (const [document, kernel] of this.activeConns.entries()) {
+			if (document.uri.toString() === uri) {
+				return kernel;
+			}
+		}
 
-  /**
-   * Gets the notebook document by the document URI.
-   */
-  public getDocumentByUri(uri: string) {
-    for (const [document, kernel] of this.activeConns.entries()) {
-      if (document.uri.toString() === uri) {
-        return document;
-      }
-    }
+		return undefined;
+	}
 
-    return undefined;
-  }
+	/**
+	 * Gets the notebook document by the document URI.
+	 */
+	public getDocumentByUri(uri: string) {
+		for (const [document, kernel] of this.activeConns.entries()) {
+			if (document.uri.toString() === uri) {
+				return document;
+			}
+		}
 
-  /**
-   * Get a kernel for the given notebook document.
-   */
-  public async getDocumentKernel(document: vscode.NotebookDocument): Promise<IRunningKernel | undefined> {
-    const editor = [...vscode.notebook.visibleNotebookEditors, vscode.notebook.activeNotebookEditor].find(editor => editor?.document.uri.toString() === document.uri.toString());
-    if (editor) {
-      return (editor.kernel as NotebookKernel).resolve();
-    }
-  }
+		return undefined;
+	}
 
-  /**
-   * Gets the active spec, if possible.
-   */
-  public async getActiveSpec() {
-    if (this.activeSpec) {
-      return this.activeSpec;
-    }
+	/**
+	 * Get a kernel for the given notebook document.
+	 */
+	public async getDocumentKernel(
+		document: vscode.NotebookDocument,
+	): Promise<IRunningKernel | undefined> {
+		const editor = [
+			...vscode.notebook.visibleNotebookEditors,
+			vscode.notebook.activeNotebookEditor,
+		].find(
+			(editor) =>
+				editor?.document.uri.toString() === document.uri.toString(),
+		);
+		if (editor) {
+			return (editor.kernel as NotebookKernel).resolve();
+		}
+	}
 
-    const available = await this.provider.getAvailableKernels();
-    if (available.length === 0) {
-      vscode.window.showErrorMessage('No Jupyter kernels were found on this machine');
-      return;
-    }
+	/**
+	 * Gets the active spec, if possible.
+	 */
+	public async getActiveSpec() {
+		if (this.activeSpec) {
+			return this.activeSpec;
+		}
 
-    const preferredLoc = this.context.globalState.get('preferredKernel');
-    const preferred = available.find(k => k.id === preferredLoc);
-    if (preferred) {
-      return preferred;
-    }
+		const available = await this.provider.getAvailableKernels();
+		if (available.length === 0) {
+			vscode.window.showErrorMessage(
+				"No Jupyter kernels were found on this machine",
+			);
+			return;
+		}
 
-    return available[0];
-  }
+		const preferredLoc = this.context.globalState.get("preferredKernel");
+		const preferred = available.find((k) => k.id === preferredLoc);
+		if (preferred) {
+			return preferred;
+		}
 
-  public async setActive(spec: IKernelSpec) {
-    this.closeAllKernels(); // no need to restart, will be done as needed
-    this.activeSpec = spec;
-    this.context.globalState.get('preferredKernel', spec.id);
-  }
+		return available[0];
+	}
 
-  /**
-   * @inheritdoc
-   */
-  public dispose() {
-    this.closeAllKernels();
-  }
+	public async setActive(spec: IKernelSpec) {
+		this.closeAllKernels(); // no need to restart, will be done as needed
+		this.activeSpec = spec;
+		this.context.globalState.get("preferredKernel", spec.id);
+	}
 
-  /**
-   * Runs UI to change the actively running kernel.
-   */
-  public async changeActive() {
-    const quickpick = vscode.window.createQuickPick<{
-      index: number;
-      label: string;
-      description: string;
-    }>();
+	/**
+	 * @inheritdoc
+	 */
+	public dispose() {
+		this.closeAllKernels();
+	}
 
-    quickpick.busy = true;
-    quickpick.show();
+	/**
+	 * Runs UI to change the actively running kernel.
+	 */
+	public async changeActive() {
+		const quickpick = vscode.window.createQuickPick<{
+			index: number;
+			label: string;
+			description: string;
+		}>();
 
-    const pickedPromise = new Promise<IKernelSpec | undefined>(resolve => {
-      quickpick.onDidHide(() => resolve());
-      quickpick.onDidAccept(() => {
-        const item = quickpick.selectedItems[0];
-        resolve(item ? available[item.index] : undefined);
-      });
-    });
+		quickpick.busy = true;
+		quickpick.show();
 
-    const available = await this.provider.getAvailableKernels();
+		const pickedPromise = new Promise<IKernelSpec | undefined>(
+			(resolve) => {
+				quickpick.onDidHide(() => resolve());
+				quickpick.onDidAccept(() => {
+					const item = quickpick.selectedItems[0];
+					resolve(item ? available[item.index] : undefined);
+				});
+			},
+		);
 
-    quickpick.items = available.map((k, i) => ({
-      index: i,
-      label: `${k.language}: ${k.displayName}`,
-      description: k.binary,
-    }));
+		const available = await this.provider.getAvailableKernels();
 
-    quickpick.activeItems = quickpick.items.filter(
-      a => available[a.index].id === this.activeSpec?.id,
-    );
+		quickpick.items = available.map((k, i) => ({
+			index: i,
+			label: `${k.language}: ${k.displayName}`,
+			description: k.binary,
+		}));
 
-    const picked = await pickedPromise;
-    quickpick.dispose();
+		quickpick.activeItems = quickpick.items.filter(
+			(a) => available[a.index].id === this.activeSpec?.id,
+		);
 
-    if (picked && picked.id !== this.activeSpec?.id) {
-      this.setActive(picked);
-    }
-  }
+		const picked = await pickedPromise;
+		quickpick.dispose();
 
-  /**
-   * Closes all running kernels.
-   */
-  public closeAllKernels() {
-    this.activeConns.forEach(c => c.forEach(kernel => kernel.resolve().then(k => k?.dispose())));
-    this.activeConns.clear();
-  }
+		if (picked && picked.id !== this.activeSpec?.id) {
+			this.setActive(picked);
+		}
+	}
+
+	/**
+	 * Closes all running kernels.
+	 */
+	public closeAllKernels() {
+		this.activeConns.forEach((c) =>
+			c.forEach((kernel) => kernel.resolve().then((k) => k?.dispose())),
+		);
+		this.activeConns.clear();
+	}
 }
