@@ -268,6 +268,7 @@ declare module "vscode" {
 	export interface ResourceLabelFormatter {
 		scheme: string;
 		authority?: string;
+
 		formatting: ResourceLabelFormatting;
 	}
 
@@ -288,6 +289,7 @@ declare module "vscode" {
 			authorityPrefix: string,
 			resolver: RemoteAuthorityResolver,
 		): Disposable;
+
 		export function registerResourceLabelFormatter(
 			formatter: ResourceLabelFormatter,
 		): Disposable;
@@ -1481,7 +1483,9 @@ declare module "vscode" {
 		dispose(): void;
 		onDidChange: Event<void>;
 		version: number;
+
 		getText(): string;
+
 		getText(range: Range): string;
 
 		offsetAt(position: Position): number;
@@ -1960,8 +1964,11 @@ declare module "vscode" {
 		export function createNotebookEditorDecorationType(
 			options: NotebookDecorationRenderOptions,
 		): NotebookEditorDecorationType;
+
 		export const onDidOpenNotebookDocument: Event<NotebookDocument>;
+
 		export const onDidCloseNotebookDocument: Event<NotebookDocument>;
+
 		export const onDidSaveNotebookDocument: Event<NotebookDocument>;
 
 		/**
@@ -1970,18 +1977,27 @@ declare module "vscode" {
 		export const notebookDocuments: ReadonlyArray<NotebookDocument>;
 
 		export const visibleNotebookEditors: NotebookEditor[];
+
 		export const onDidChangeVisibleNotebookEditors: Event<NotebookEditor[]>;
 
 		export const activeNotebookEditor: NotebookEditor | undefined;
+
 		export const onDidChangeActiveNotebookEditor: Event<
 			NotebookEditor | undefined
 		>;
+
 		export const onDidChangeNotebookEditorSelection: Event<NotebookEditorSelectionChangeEvent>;
+
 		export const onDidChangeNotebookEditorVisibleRanges: Event<NotebookEditorVisibleRangesChangeEvent>;
+
 		export const onDidChangeNotebookDocumentMetadata: Event<NotebookDocumentMetadataChangeEvent>;
+
 		export const onDidChangeNotebookCells: Event<NotebookCellsChangeEvent>;
+
 		export const onDidChangeCellOutputs: Event<NotebookCellOutputsChangeEvent>;
+
 		export const onDidChangeCellLanguage: Event<NotebookCellLanguageChangeEvent>;
+
 		export const onDidChangeCellMetadata: Event<NotebookCellMetadataChangeEvent>;
 		/**
 		 * Create a document that is the concatenation of all  notebook cells. By default all code-cells are included

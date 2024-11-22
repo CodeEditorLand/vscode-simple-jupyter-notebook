@@ -187,6 +187,7 @@ export class JupyterNotebook {
 			},
 			cells: this.notebookJSON.cells.map((raw_cell: RawCell) => {
 				let outputs: vscode.CellOutput[] = [];
+
 				if (this.fillOutputs) {
 					outputs =
 						raw_cell.outputs?.map((rawOutput) =>
@@ -198,6 +199,7 @@ export class JupyterNotebook {
 
 						if (containHTML) {
 							this.preloadScript = true;
+
 							const scriptPathOnDisk = vscode.Uri.file(
 								path.join(
 									this._extensionPath,
@@ -226,6 +228,7 @@ export class JupyterNotebook {
 					typeof raw_cell.execution_count === "number"
 						? raw_cell.execution_count
 						: undefined;
+
 				if (typeof executionOrder === "number") {
 					if (executionOrder >= this.nextExecutionOrder) {
 						this.nextExecutionOrder = executionOrder + 1;
@@ -233,7 +236,9 @@ export class JupyterNotebook {
 				}
 
 				const cellEditable = raw_cell.metadata?.editable;
+
 				const runnable = raw_cell.metadata?.runnable;
+
 				const metadata = {
 					editable: cellEditable,
 					runnable: runnable,
@@ -266,12 +271,15 @@ export class JupyterNotebook {
 	) {
 		if (cell) {
 			const index = document.cells.indexOf(cell);
+
 			let rawCell: RawCell = this.notebookJSON.cells[index];
 
 			if (!this.preloadScript) {
 				let containHTML = this.containHTML(rawCell);
+
 				if (containHTML) {
 					this.preloadScript = true;
+
 					const scriptPathOnDisk = vscode.Uri.file(
 						path.join(this._extensionPath, "dist", "ipywidgets.js"),
 					);
@@ -294,7 +302,9 @@ export class JupyterNotebook {
 				rawCell.outputs?.map((rawOutput) =>
 					transformOutputToCore(rawOutput),
 				) || [];
+
 			const executionOrder = this.getNextExecutionOrder();
+
 			if (cell.metadata) {
 				cell.metadata.executionOrder = executionOrder;
 			}
@@ -307,8 +317,10 @@ export class JupyterNotebook {
 
 					if (!this.preloadScript) {
 						let containHTML = this.containHTML(rawCell);
+
 						if (containHTML) {
 							this.preloadScript = true;
+
 							const scriptPathOnDisk = vscode.Uri.file(
 								path.join(
 									this._extensionPath,
@@ -335,7 +347,9 @@ export class JupyterNotebook {
 						rawCell.outputs?.map((rawOutput) =>
 							transformOutputToCore(rawOutput),
 						) || [];
+
 					const executionOrder = this.getNextExecutionOrder();
+
 					if (cell.metadata) {
 						cell.metadata.executionOrder = executionOrder;
 					}
@@ -366,6 +380,7 @@ export class JupyterNotebook {
 async function timeFn(fn: () => Promise<void>): Promise<number> {
 	const startTime = Date.now();
 	await fn();
+
 	return Date.now() - startTime;
 }
 
@@ -393,7 +408,9 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 	async openNotebook(uri: vscode.Uri): Promise<vscode.NotebookData> {
 		try {
 			let content = await vscode.workspace.fs.readFile(uri);
+
 			let json: any = {};
+
 			try {
 				json = JSON.parse(content.toString());
 			} catch {
@@ -412,6 +429,7 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 				this.fillOutputs,
 			);
 			this._notebooks.set(uri.toString(), jupyterNotebook);
+
 			return jupyterNotebook.resolve();
 		} catch {
 			throw new Error("Fail to load the document");
@@ -444,6 +462,7 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 			let lines = document.cells[i].document
 				.getText()
 				.split(/\r|\n|\r\n/g);
+
 			let source = lines.map((value, index) => {
 				if (index !== lines.length - 1) {
 					return value + "\n";
@@ -489,6 +508,7 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 
 		if (raw) {
 			raw.notebookJSON.cells = cells;
+
 			let content = JSON.stringify(raw.notebookJSON, null, 4);
 			await vscode.workspace.fs.writeFile(
 				targetResource,
@@ -517,6 +537,7 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 		cancellation: vscode.CancellationToken,
 	): Promise<vscode.NotebookDocumentBackup> {
 		await this._save(document, context.destination, cancellation);
+
 		const uri = context.destination;
 
 		return {

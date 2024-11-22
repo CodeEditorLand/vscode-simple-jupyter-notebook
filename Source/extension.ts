@@ -43,6 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 			"simple-jupyter-notebook.toggleDebugging",
 			() => {
 				const editor = vscode.notebook.activeNotebookEditor;
+
 				if (editor) {
 					debuggerManager.toggleDebugging(editor.document);
 				} else {

@@ -68,6 +68,7 @@ export class DisposableList {
 	public push(...newItems: ReadonlyArray<IDisposable>) {
 		if (this.disposed) {
 			newItems.forEach((d) => d.dispose());
+
 			return;
 		}
 
@@ -89,6 +90,7 @@ export class DisposableList {
 		const r = Promise.all(this.items.map((i) => i.dispose()));
 		this.items = [];
 		this.disposed = true;
+
 		return r;
 	}
 }

@@ -69,6 +69,7 @@ export class Connection implements IDisposable {
 	 */
 	public static async create() {
 		const routingId = crypto.randomBytes(8).toString("hex");
+
 		const sockets: ISockets = await promiseMap({
 			key: crypto.randomBytes(32).toString("hex"),
 			signatureScheme: "hmac-sha256",
@@ -89,6 +90,7 @@ export class Connection implements IDisposable {
 		cnx.processSocketMessages("iopub", sockets.iopub.socket);
 		cnx.processSocketMessages("shell", sockets.shell.socket);
 		cnx.processSocketMessages("stdin", sockets.stdin.socket);
+
 		return cnx;
 	}
 
@@ -136,6 +138,7 @@ export class Connection implements IDisposable {
 			this.sockets.key,
 			this.sockets.signatureScheme,
 		);
+
 		return this.sockets[message.channel as SendChannel].socket.send(data);
 	}
 
@@ -175,6 +178,7 @@ async function createConnectionFile(
 		`xues-notebook-cnf-${crypto.randomBytes(8).toString("hex")}.json`,
 	);
 	await fs.writeFile(fname, contents);
+
 	return fname;
 }
 
@@ -183,5 +187,6 @@ async function createSocket<T extends zmq.Socket>(
 ): Promise<{ socket: T; port: number }> {
 	const port = await getPort();
 	socket.connect(`tcp://127.0.0.1:${port}`);
+
 	return { port, socket };
 }

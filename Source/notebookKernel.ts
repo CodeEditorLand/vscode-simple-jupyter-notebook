@@ -51,6 +51,7 @@ export class NotebookKernel implements vscode.NotebookKernel {
 				vscode.window.showErrorMessage(
 					`Error launching kernel: ${e.stack}`,
 				);
+
 				return undefined;
 			});
 
@@ -76,6 +77,7 @@ export class NotebookKernel implements vscode.NotebookKernel {
 		}
 
 		const kernel = await this.resolve();
+
 		if (!kernel) {
 			return;
 		}
@@ -140,8 +142,10 @@ export class NotebookKernel implements vscode.NotebookKernel {
 						];
 					} else if (isMessageType("stream", msg)) {
 						const content = msg.content.text as string;
+
 						if (acc.length > 0) {
 							const prev = acc[acc.length - 1];
+
 							if (
 								prev?.outputKind === vscode.CellOutputKind.Text
 							) {
@@ -170,6 +174,7 @@ export class NotebookKernel implements vscode.NotebookKernel {
 
 		cell.outputs = await kernelOutputs;
 		cell.metadata.runState = vscode.NotebookCellRunState.Success;
+
 		if (NotebookKernel.logOperations) {
 			cell.outputs.push({
 				outputKind: vscode.CellOutputKind.Text,

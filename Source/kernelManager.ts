@@ -23,6 +23,7 @@ export class KernelManager
 	) {
 		vscode.notebook.onDidCloseNotebookDocument((document) => {
 			const kernelCache = this.activeConns.get(document);
+
 			if (!kernelCache) {
 				return;
 			}
@@ -39,18 +40,21 @@ export class KernelManager
 		token: vscode.CancellationToken,
 	): Promise<vscode.NotebookKernel[]> {
 		const kernelSpecs = await this.provider.getAvailableKernels();
+
 		const kernelsCache =
 			this.activeConns.get(document) || new Map<string, NotebookKernel>();
 		this.activeConns.set(document, kernelsCache);
 
 		return kernelSpecs.map((spec) => {
 			const specId = `__${spec.id}__${spec.location}`;
+
 			if (kernelsCache.has(specId)) {
 				return kernelsCache.get(specId)!;
 			}
 
 			const kernel = new NotebookKernel(this.provider, spec);
 			kernelsCache.set(specId, kernel);
+
 			return kernel;
 		});
 	}
@@ -111,6 +115,7 @@ export class KernelManager
 			(editor) =>
 				editor?.document.uri.toString() === document.uri.toString(),
 		);
+
 		if (editor) {
 			return (editor.kernel as NotebookKernel).resolve();
 		}
@@ -125,15 +130,19 @@ export class KernelManager
 		}
 
 		const available = await this.provider.getAvailableKernels();
+
 		if (available.length === 0) {
 			vscode.window.showErrorMessage(
 				"No Jupyter kernels were found on this machine",
 			);
+
 			return;
 		}
 
 		const preferredLoc = this.context.globalState.get("preferredKernel");
+
 		const preferred = available.find((k) => k.id === preferredLoc);
+
 		if (preferred) {
 			return preferred;
 		}

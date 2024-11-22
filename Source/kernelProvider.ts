@@ -44,6 +44,7 @@ export class KernelProvider {
 	 */
 	public static defaultSearchPaths() {
 		const searchPaths: IKernelSpecSearchPath[] = [];
+
 		if (process.env.CONDA_PREFIX) {
 			searchPaths.push(
 				{
@@ -122,8 +123,10 @@ export class KernelProvider {
 		// In each folder, there can be subdirectories that contain the `kernel.json`
 		// and logo. Extract and return those.
 		const specs: IKernelSpec[] = [];
+
 		for (const { path, type } of this.searchPaths()) {
 			let kernels: string[];
+
 			try {
 				kernels = await fs.readdir(path);
 			} catch {
@@ -132,10 +135,12 @@ export class KernelProvider {
 
 			for (const kernel of kernels) {
 				const jsonPath = join(path, kernel, "kernel.json");
+
 				if (await exists(jsonPath)) {
 					const rawSpec = JSON.parse(
 						await fs.readFile(jsonPath, "utf-8"),
 					);
+
 					const iconPath = join(path, kernel, "logo-64x64.png");
 					specs.push({
 						id: [path, ...rawSpec.argv, rawSpec.language].join(" "),
@@ -161,6 +166,7 @@ export class KernelProvider {
 	 */
 	public async launchKernel(spec: IKernelSpec): Promise<IRunningKernel> {
 		const connection = await Connection.create();
+
 		const process = new KernelProcess(
 			spawn(
 				spec.binary,
