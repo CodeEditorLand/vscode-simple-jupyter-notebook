@@ -236,6 +236,7 @@ export const debugRequest = simpleFactory<DebugRequestMessage>(
 	"debug_request",
 	"control",
 );
+
 export const debugResponse = simpleFactory<DebugReplyMessage>(
 	"debug_reply",
 	"control",
