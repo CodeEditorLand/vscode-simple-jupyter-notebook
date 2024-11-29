@@ -36,6 +36,7 @@ export type JupyterMessage<
 	Channel = IOChannel,
 > = Omit<nteract.JupyterMessage<never, C>, "header" | "channel"> & {
 	header: JupyterMessageHeader<MT>;
+
 	channel: Channel;
 };
 
@@ -46,10 +47,15 @@ export type ExecuteRequest = JupyterMessage<
 	"execute_request",
 	{
 		code: string;
+
 		silent: boolean;
+
 		store_history: boolean;
+
 		user_expressions: { [key: string]: string };
+
 		allow_stdin: boolean;
+
 		stop_on_error: boolean;
 	},
 	"shell"
@@ -62,6 +68,7 @@ export type ExecuteReply = JupyterMessage<
 	"execute_reply",
 	{
 		status: string;
+
 		execution_count: number;
 	},
 	"shell"
@@ -74,6 +81,7 @@ export type ExecuteResult = JupyterMessage<
 	"execute_result",
 	{
 		data: { [mimeType: string]: string };
+
 		metadata: { [key: string]: unknown };
 	},
 	"iopub"
@@ -86,7 +94,9 @@ export type DisplayData = JupyterMessage<
 	"display_data",
 	{
 		data: { [mimeType: string]: string };
+
 		metadata: { [key: string]: unknown };
+
 		transient: { [key: string]: unknown };
 	},
 	"iopub"
@@ -99,6 +109,7 @@ export type StreamOutput = JupyterMessage<
 	"stream",
 	{
 		stream: "stdout" | "stderr";
+
 		text: string;
 	},
 	"iopub"
@@ -111,7 +122,9 @@ export type ExecutionError = JupyterMessage<
 	"error",
 	{
 		ename: string;
+
 		evalue: string;
+
 		traceback: string[];
 	},
 	"iopub"
@@ -246,9 +259,13 @@ export const executeRequest = (
 	code: string,
 	options: {
 		silent?: boolean;
+
 		storeHistory?: boolean;
+
 		userExpressions?: { [key: string]: string };
+
 		allowStdin?: boolean;
+
 		stopOnError?: boolean;
 	} = {},
 ): ExecuteRequest => ({

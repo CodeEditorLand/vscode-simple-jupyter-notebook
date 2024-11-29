@@ -18,12 +18,18 @@ export class NotebookKernel implements vscode.NotebookKernel {
 	private static readonly logOperations = false;
 
 	public id?: string;
+
 	public label: string;
+
 	public description: string;
+
 	public isPreferred: boolean;
+
 	private _resolveKernel?: Promise<IRunningKernel | undefined>;
+
 	private _requestCancellation = new Subject<{
 		document?: vscode.NotebookDocument;
+
 		cell?: vscode.NotebookCell;
 	}>();
 
@@ -32,8 +38,11 @@ export class NotebookKernel implements vscode.NotebookKernel {
 		readonly kernelSpec: IKernelSpec,
 	) {
 		this.id = kernelSpec.id;
+
 		this.label = kernelSpec.displayName;
+
 		this.description = `${kernelSpec.location} (${kernelSpec.binary})`;
+
 		this.isPreferred = false;
 	}
 
@@ -124,6 +133,7 @@ export class NotebookKernel implements vscode.NotebookKernel {
 							},
 						];
 					}
+
 					if (isMessageType("display_data", msg)) {
 						return [
 							...acc,
@@ -173,6 +183,7 @@ export class NotebookKernel implements vscode.NotebookKernel {
 			.toPromise();
 
 		cell.outputs = await kernelOutputs;
+
 		cell.metadata.runState = vscode.NotebookCellRunState.Success;
 
 		if (NotebookKernel.logOperations) {

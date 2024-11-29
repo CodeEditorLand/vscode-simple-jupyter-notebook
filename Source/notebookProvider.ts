@@ -10,6 +10,7 @@ declare var TextEncoder: any;
 
 interface CellStreamOutput {
 	output_type: "stream";
+
 	text: string;
 }
 
@@ -31,6 +32,7 @@ interface CellErrorOutput {
 
 interface CellDisplayOutput {
 	output_type: "display_data" | "execute_result";
+
 	data: { [key: string]: any };
 }
 
@@ -41,9 +43,13 @@ export type RawCellOutput =
 
 export interface RawCell {
 	cell_type: "markdown" | "code";
+
 	outputs?: RawCellOutput[];
+
 	source: string[];
+
 	metadata: any;
+
 	execution_count?: number;
 }
 
@@ -66,6 +72,7 @@ export class Cell {
 				) {
 					return true;
 				}
+
 				return false;
 			})
 		);
@@ -137,7 +144,9 @@ function transformOutputFromCore(output: vscode.CellOutput): RawCellOutput {
 
 export class JupyterNotebook {
 	public mapping: Map<number, any> = new Map();
+
 	private preloadScript = false;
+
 	private displayOrders = [
 		"application/vnd.*",
 		"application/json",
@@ -150,6 +159,7 @@ export class JupyterNotebook {
 		"image/jpeg",
 		"text/plain",
 	];
+
 	private nextExecutionOrder = 0;
 
 	constructor(
@@ -298,6 +308,7 @@ export class JupyterNotebook {
 					});
 				}
 			}
+
 			cell.outputs =
 				rawCell.outputs?.map((rawOutput) =>
 					transformOutputToCore(rawOutput),
@@ -343,6 +354,7 @@ export class JupyterNotebook {
 							});
 						}
 					}
+
 					cell.outputs =
 						rawCell.outputs?.map((rawOutput) =>
 							transformOutputToCore(rawOutput),
@@ -379,6 +391,7 @@ export class JupyterNotebook {
 
 async function timeFn(fn: () => Promise<void>): Promise<number> {
 	const startTime = Date.now();
+
 	await fn();
 
 	return Date.now() - startTime;
@@ -387,10 +400,14 @@ async function timeFn(fn: () => Promise<void>): Promise<number> {
 export class NotebookProvider implements vscode.NotebookContentProvider {
 	private _onDidChangeNotebook =
 		new vscode.EventEmitter<vscode.NotebookDocumentEditEvent>();
+
 	onDidChangeNotebook: vscode.Event<vscode.NotebookDocumentEditEvent> =
 		this._onDidChangeNotebook.event;
+
 	private _notebooks: Map<string, JupyterNotebook> = new Map();
+
 	onDidChange: vscode.Event<void> = new vscode.EventEmitter<void>().event;
+
 	label: string = "Jupyter";
 
 	constructor(
@@ -423,11 +440,13 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 					],
 				};
 			}
+
 			let jupyterNotebook = new JupyterNotebook(
 				this._extensionPath,
 				json,
 				this.fillOutputs,
 			);
+
 			this._notebooks.set(uri.toString(), jupyterNotebook);
 
 			return jupyterNotebook.resolve();
@@ -510,12 +529,14 @@ export class NotebookProvider implements vscode.NotebookContentProvider {
 			raw.notebookJSON.cells = cells;
 
 			let content = JSON.stringify(raw.notebookJSON, null, 4);
+
 			await vscode.workspace.fs.writeFile(
 				targetResource,
 				new TextEncoder().encode(content),
 			);
 		} else {
 			let content = JSON.stringify({ cells: cells }, null, 4);
+
 			await vscode.workspace.fs.writeFile(
 				targetResource,
 				new TextEncoder().encode(content),

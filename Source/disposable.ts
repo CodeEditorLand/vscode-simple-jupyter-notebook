@@ -45,6 +45,7 @@ export const noOpDisposable = { dispose: () => undefined };
  */
 export class DisposableList {
 	private disposed = false;
+
 	private items: IDisposable[] = [];
 
 	constructor(initialItems?: ReadonlyArray<IDisposable>) {
@@ -80,6 +81,7 @@ export class DisposableList {
 	 */
 	public disposeObject(d: IDisposable) {
 		this.items = this.items.filter((i) => i !== d);
+
 		d.dispose();
 	}
 
@@ -88,7 +90,9 @@ export class DisposableList {
 	 */
 	public dispose() {
 		const r = Promise.all(this.items.map((i) => i.dispose()));
+
 		this.items = [];
+
 		this.disposed = true;
 
 		return r;

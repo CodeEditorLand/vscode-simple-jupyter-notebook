@@ -14,12 +14,19 @@ import { exists, uniqueBy } from "./util";
 
 export interface IKernelSpec {
 	id: string;
+
 	location: string;
+
 	locationType: LocationType;
+
 	binary: string;
+
 	argv: ReadonlyArray<string>;
+
 	displayName: string;
+
 	language: string;
+
 	iconDataUri?: string;
 }
 
@@ -30,11 +37,13 @@ export const enum LocationType {
 
 export interface IRunningKernel extends IDisposable {
 	connection: Connection;
+
 	process: KernelProcess;
 }
 
 export interface IKernelSpecSearchPath {
 	type: LocationType;
+
 	path: string;
 }
 
@@ -142,6 +151,7 @@ export class KernelProvider {
 					);
 
 					const iconPath = join(path, kernel, "logo-64x64.png");
+
 					specs.push({
 						id: [path, ...rawSpec.argv, rawSpec.language].join(" "),
 						location: path,
@@ -182,6 +192,7 @@ export class KernelProvider {
 			process,
 			dispose: () => {
 				connection.dispose();
+
 				process.dispose();
 			},
 		};

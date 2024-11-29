@@ -36,6 +36,7 @@ export class DebuggingManager {
 				for (const [doc, dbg] of this.notebookToDebugger.entries()) {
 					if (dbg && session === (await dbg.session)) {
 						this.notebookToDebugger.delete(doc);
+
 						this.updateDebuggerUI(doc, false);
 
 						break;
@@ -50,6 +51,7 @@ export class DebuggingManager {
 				if (dbg) {
 					await dbg.stop();
 				}
+
 				this.fixBreakpoints(document);
 			}),
 
@@ -118,6 +120,7 @@ export class DebuggingManager {
 						removeBpt.push(b);
 
 						const loc = new vscode.Location(s, b.location.range);
+
 						addBpts.push(
 							new vscode.SourceBreakpoint(
 								loc /*, b.enabled, b.condition, b.hitCondition, b.logMessage*/,
@@ -126,9 +129,11 @@ export class DebuggingManager {
 					}
 				}
 			}
+
 			if (removeBpt.length > 0) {
 				vscode.debug.removeBreakpoints(removeBpt);
 			}
+
 			if (addBpts.length > 0) {
 				vscode.debug.addBreakpoints(addBpts);
 			}
@@ -144,16 +149,20 @@ export class DebuggingManager {
 			await dbg.stop();
 		} else {
 			dbg = new Debugger(doc);
+
 			this.notebookToDebugger.set(doc, dbg);
+
 			await this.kernelManager.getDocumentKernel(doc); // ensure the kernel is running
 			try {
 				await dbg.session;
+
 				showBreakpointMargin = true;
 			} catch (err) {
 				vscode.window.showErrorMessage(
 					`Can't start debugging (${err})`,
 				);
 			}
+
 			this.updateDebuggerUI(doc, showBreakpointMargin);
 		}
 	}
@@ -166,6 +175,7 @@ export class DebuggingManager {
 				return dbg;
 			}
 		}
+
 		return undefined;
 	}
 
@@ -183,6 +193,7 @@ export class DebuggingManager {
 
 class Debugger {
 	private resolveFunc?: (value: vscode.DebugSession) => void;
+
 	private rejectFunc?: (reason?: Error) => void;
 
 	readonly session: Promise<vscode.DebugSession>;
@@ -190,6 +201,7 @@ class Debugger {
 	constructor(public readonly document: vscode.NotebookDocument) {
 		this.session = new Promise<vscode.DebugSession>((resolve, reject) => {
 			this.resolveFunc = resolve;
+
 			this.rejectFunc = reject;
 
 			vscode.debug
@@ -238,9 +250,12 @@ const isDebugMessage = (msg: JupyterMessage): msg is DebugMessage =>
  */
 class XeusDebugAdapter implements vscode.DebugAdapter {
 	private readonly fileToCell = new Map<string, vscode.NotebookCell>();
+
 	private readonly cellToFile = new Map<string, string>();
+
 	private readonly sendMessage =
 		new vscode.EventEmitter<vscode.DebugProtocolMessage>();
+
 	private readonly messageListener: Subscription;
 
 	onDidSendMessage: vscode.Event<vscode.DebugProtocolMessage> =
@@ -270,6 +285,7 @@ class XeusDebugAdapter implements vscode.DebugAdapter {
 							if (cellIndex >= 0) {
 								source.name += `, Cell ${cellIndex + 1}`;
 							}
+
 							source.path = cell.uri.toString();
 						}
 					}
@@ -344,7 +360,9 @@ class XeusDebugAdapter implements vscode.DebugAdapter {
 				const response = await this.session.customRequest("dumpCell", {
 					code: cell.document.getText(),
 				});
+
 				this.fileToCell.set(response.sourcePath, cell);
+
 				this.cellToFile.set(cell.uri.toString(), response.sourcePath);
 			} catch (err) {
 				console.log(err);
@@ -388,6 +406,7 @@ function visitSources(
 				default:
 					break;
 			}
+
 			break;
 
 		case "request":
@@ -432,6 +451,7 @@ function visitSources(
 				default:
 					break;
 			}
+
 			break;
 
 		case "response":
@@ -486,6 +506,7 @@ function visitSources(
 						break;
 				}
 			}
+
 			break;
 	}
 }

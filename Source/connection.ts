@@ -22,11 +22,17 @@ import { promiseMap } from "./util";
 
 interface ISockets {
 	key: string;
+
 	signatureScheme: string;
+
 	heartbeat: { port: number; socket: zmq.Push };
+
 	control: { port: number; socket: zmq.Dealer };
+
 	shell: { port: number; socket: zmq.Dealer };
+
 	stdin: { port: number; socket: zmq.Dealer };
+
 	iopub: { port: number; socket: zmq.Subscriber };
 }
 
@@ -86,9 +92,13 @@ export class Connection implements IDisposable {
 			sockets,
 			await createConnectionFile(sockets),
 		);
+
 		cnx.processSocketMessages("control", sockets.control.socket);
+
 		cnx.processSocketMessages("iopub", sockets.iopub.socket);
+
 		cnx.processSocketMessages("shell", sockets.shell.socket);
+
 		cnx.processSocketMessages("stdin", sockets.stdin.socket);
 
 		return cnx;
@@ -109,6 +119,7 @@ export class Connection implements IDisposable {
 				this.sockets.key,
 				this.sockets.signatureScheme,
 			);
+
 			this.messages.next(fromRawMessage(channel, message));
 		}
 	}
@@ -147,10 +158,15 @@ export class Connection implements IDisposable {
 	 */
 	public dispose() {
 		this.sockets.control.socket.close();
+
 		this.sockets.heartbeat.socket.close();
+
 		this.sockets.iopub.socket.close();
+
 		this.sockets.shell.socket.close();
+
 		this.sockets.stdin.socket.close();
+
 		fs.unlink(this.connectionFile).catch(() => {
 			/* it's a temp file, just ignore */
 		});
@@ -177,6 +193,7 @@ async function createConnectionFile(
 		tmpdir(),
 		`xues-notebook-cnf-${crypto.randomBytes(8).toString("hex")}.json`,
 	);
+
 	await fs.writeFile(fname, contents);
 
 	return fname;
@@ -186,6 +203,7 @@ async function createSocket<T extends zmq.Socket>(
 	socket: T,
 ): Promise<{ socket: T; port: number }> {
 	const port = await getPort();
+
 	socket.connect(`tcp://127.0.0.1:${port}`);
 
 	return { port, socket };

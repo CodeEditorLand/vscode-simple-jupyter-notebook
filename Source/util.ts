@@ -14,6 +14,7 @@ export const promiseMap = async <T extends { [key: string]: unknown }>(
 	obj: T,
 ): Promise<ResolvedMap<T>> => {
 	const out: Partial<ResolvedMap<T>> = {};
+
 	await Promise.all(
 		Object.keys(obj).map(
 			async (key) =>

@@ -12,6 +12,7 @@ export class KernelManager
 	implements IDisposable, vscode.NotebookKernelProvider
 {
 	private activeSpec?: IKernelSpec;
+
 	private activeConns = new Map<
 		vscode.NotebookDocument,
 		Map<string, NotebookKernel>
@@ -29,6 +30,7 @@ export class KernelManager
 			}
 
 			this.activeConns.delete(document);
+
 			kernelCache.forEach((kernel) =>
 				kernel.resolve().then((k) => k?.dispose()),
 			);
@@ -43,6 +45,7 @@ export class KernelManager
 
 		const kernelsCache =
 			this.activeConns.get(document) || new Map<string, NotebookKernel>();
+
 		this.activeConns.set(document, kernelsCache);
 
 		return kernelSpecs.map((spec) => {
@@ -53,6 +56,7 @@ export class KernelManager
 			}
 
 			const kernel = new NotebookKernel(this.provider, spec);
+
 			kernelsCache.set(specId, kernel);
 
 			return kernel;
@@ -153,6 +157,7 @@ export class KernelManager
 	public async setActive(spec: IKernelSpec) {
 		this.closeAllKernels(); // no need to restart, will be done as needed
 		this.activeSpec = spec;
+
 		this.context.globalState.get("preferredKernel", spec.id);
 	}
 
@@ -169,18 +174,23 @@ export class KernelManager
 	public async changeActive() {
 		const quickpick = vscode.window.createQuickPick<{
 			index: number;
+
 			label: string;
+
 			description: string;
 		}>();
 
 		quickpick.busy = true;
+
 		quickpick.show();
 
 		const pickedPromise = new Promise<IKernelSpec | undefined>(
 			(resolve) => {
 				quickpick.onDidHide(() => resolve());
+
 				quickpick.onDidAccept(() => {
 					const item = quickpick.selectedItems[0];
+
 					resolve(item ? available[item.index] : undefined);
 				});
 			},
@@ -199,6 +209,7 @@ export class KernelManager
 		);
 
 		const picked = await pickedPromise;
+
 		quickpick.dispose();
 
 		if (picked && picked.id !== this.activeSpec?.id) {
@@ -213,6 +224,7 @@ export class KernelManager
 		this.activeConns.forEach((c) =>
 			c.forEach((kernel) => kernel.resolve().then((k) => k?.dispose())),
 		);
+
 		this.activeConns.clear();
 	}
 }

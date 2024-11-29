@@ -28,8 +28,11 @@ export class KernelProcess implements IDisposable {
 
 	constructor(private readonly cp: ChildProcessWithoutNullStreams) {
 		cp.stderr.pipe(split()).on("data", (line) => this.stderr.next(line));
+
 		cp.stdout.pipe(split()).on("data", (line) => this.stderr.next(line));
+
 		cp.on("error", (err) => this.exit.next(err));
+
 		cp.on("exit", (code) =>
 			this.exit.next(
 				code && !this.killed
@@ -67,6 +70,7 @@ export class KernelProcess implements IDisposable {
 	 */
 	public dispose() {
 		this.killed = true;
+
 		this.cp.kill();
 	}
 }
