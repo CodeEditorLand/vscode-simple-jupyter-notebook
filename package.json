@@ -84,11 +84,11 @@
 		"get-port": "7.1.0",
 		"rxjs": "7.8.1",
 		"split2": "4.2.0",
-		"zeromq": "6.1.2"
+		"zeromq": "6.3.0"
 	},
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "22.10.1",
+		"@types/node": "22.10.5",
 		"@types/split2": "4.2.3",
 		"glob": "11.0.0"
 	},
